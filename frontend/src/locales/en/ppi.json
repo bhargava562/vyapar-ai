@@ -1,0 +1,38 @@
+{
+  "title": "Price Power Index",
+  "subtitle": "Check your bargaining power",
+  "product_selection": {
+    "label": "Select Product",
+    "placeholder": "Choose a product",
+    "search_placeholder": "Search products..."
+  },
+  "quantity": {
+    "label": "Quantity",
+    "placeholder": "Enter quantity"
+  },
+  "calculate": "Calculate PPI",
+  "result": {
+    "title": "Your PPI Score",
+    "confidence": "Confidence: {{score}}%",
+    "recommendation": "Recommendation",
+    "factors": "Contributing Factors",
+    "expires": "Valid until {{time}}"
+  },
+  "recommendations": {
+    "maintain_price": "Maintain your current price",
+    "increase_price": "You can increase your price",
+    "decrease_price": "Consider lowering your price",
+    "market_volatile": "Market is volatile, be cautious"
+  },
+  "color_zones": {
+    "red": "Low bargaining power (0-30)",
+    "yellow": "Moderate bargaining power (30-70)", 
+    "green": "High bargaining power (70-100)"
+  },
+  "factors": {
+    "wholesale": "Wholesale Price",
+    "weather": "Weather Impact",
+    "crowdsourced": "Local Market Data",
+    "historical": "Historical Trends"
+  }
+}

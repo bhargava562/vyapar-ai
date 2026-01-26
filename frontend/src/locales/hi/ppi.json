@@ -1,0 +1,38 @@
+{
+  "title": "प्राइस पावर इंडेक्स",
+  "subtitle": "अपनी मोलभाव की शक्ति जांचें",
+  "product_selection": {
+    "label": "उत्पाद चुनें",
+    "placeholder": "एक उत्पाद चुनें",
+    "search_placeholder": "उत्पाद खोजें..."
+  },
+  "quantity": {
+    "label": "मात्रा",
+    "placeholder": "मात्रा दर्ज करें"
+  },
+  "calculate": "PPI गणना करें",
+  "result": {
+    "title": "आपका PPI स्कोर",
+    "confidence": "विश्वास: {{score}}%",
+    "recommendation": "सिफारिश",
+    "factors": "योगदान कारक",
+    "expires": "{{time}} तक वैध"
+  },
+  "recommendations": {
+    "maintain_price": "अपनी वर्तमान कीमत बनाए रखें",
+    "increase_price": "आप अपनी कीमत बढ़ा सकते हैं",
+    "decrease_price": "कीमत कम करने पर विचार करें",
+    "market_volatile": "बाजार अस्थिर है, सावधान रहें"
+  },
+  "color_zones": {
+    "red": "कम मोलभाव शक्ति (0-30)",
+    "yellow": "मध्यम मोलभाव शक्ति (30-70)",
+    "green": "उच्च मोलभाव शक्ति (70-100)"
+  },
+  "factors": {
+    "wholesale": "थोक मूल्य",
+    "weather": "मौसम प्रभाव",
+    "crowdsourced": "स्थानीय बाजार डेटा",
+    "historical": "ऐतिहासिक रुझान"
+  }
+}

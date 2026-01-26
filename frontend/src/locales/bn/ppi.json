@@ -1,0 +1,34 @@
+{
+  "title": "দাম শক্তি সূচক (PPI)",
+  "subtitle": "আপনার দরকষাকষির শক্তি জানুন",
+  "check_price": "দাম যাচাই করুন",
+  "product_label": "পণ্য",
+  "quantity_label": "পরিমাণ",
+  "current_price_label": "বর্তমান দাম",
+  "calculate": "গণনা করুন",
+  "ppi_score": "PPI স্কোর",
+  "confidence": "আস্থা",
+  "recommendation": "সুপারিশ",
+  "factors": "প্রভাবশালী কারণ",
+  "explanation": "ব্যাখ্যা",
+  "ranges": {
+    "low": "কম (০-৩০)",
+    "medium": "মধ্যম (৩০-৭০)",
+    "high": "বেশি (৭০-১০০)"
+  },
+  "recommendations": {
+    "accept_lower": "কম দাম গ্রহণ করুন",
+    "moderate_pricing": "মধ্যম দাম নির্ধারণ",
+    "maintain_higher": "বেশি দাম বজায় রাখুন"
+  },
+  "factors_types": {
+    "wholesale": "পাইকারি দাম",
+    "weather": "আবহাওয়া",
+    "crowdsourced": "কমিউনিটি ডেটা",
+    "historical": "ঐতিহাসিক প্রবণতা"
+  },
+  "loading": "PPI গণনা করা হচ্ছে...",
+  "error": "PPI গণনায় ত্রুটি",
+  "expired": "PPI এর মেয়াদ শেষ",
+  "refresh": "রিফ্রেশ করুন"
+}

@@ -1,0 +1,83 @@
+{
+  "status": "Status",
+  "language": "Language",
+  "transcription": "Transcription",
+  "confidence": "Confidence",
+  "listening": "Listening...",
+  "processing": "Processing...",
+  "playing": "Playing response",
+  "ready": "Ready",
+  "speak_name": "Speak your name",
+  "speak_location": "Speak your market location",
+  "tap_to_speak": "Tap to speak",
+  "hold_to_speak": "Hold to speak",
+  "release_to_stop": "Release to stop",
+  "tap_to_speak_instruction": "Tap the microphone button to start speaking",
+  "hold_to_speak_instruction": "Hold the microphone button while speaking",
+  "try_again": "Please try speaking again",
+  "use_keyboard": "Use keyboard instead",
+  "recording_failed": "Failed to start recording. Please check microphone permissions.",
+  "processing_failed": "Voice processing failed. Please try again.",
+  "not_supported": "Voice input is not supported on this device",
+  "initialization_failed": "Voice service initialization failed",
+  "permission_required": "Microphone permission is required for voice input",
+  "microphone_denied": "Microphone access was denied",
+  "no_speech": "No speech detected. Please try again.",
+  "network_error": "Network error occurred during voice processing",
+  "bhashini_error": "Bhashini service is temporarily unavailable",
+  "fallback_mode": "Using fallback voice recognition",
+  "quality": {
+    "excellent": "Excellent",
+    "good": "Good", 
+    "fair": "Fair",
+    "poor": "Poor"
+  },
+  "instructions": {
+    "price_query": "Say something like: 'What is the price of tomatoes?'",
+    "fpc_generate": "Say: 'Generate QR code for tomatoes at 50 rupees'",
+    "help": "Say 'help' to get assistance",
+    "navigation": "Say where you want to go, like 'dashboard' or 'profile'"
+  },
+  "responses": {
+    "price_query": "I am getting price information for you.",
+    "fpc_generate": "I am generating a QR code for you.",
+    "help": "I can help you with prices, QR codes, and navigation. What would you like to do?",
+    "unknown": "I didn't understand that. Please try again or use the keyboard.",
+    "welcome": "Welcome to Market Mania voice assistant. How can I help you today?"
+  },
+  "errors": {
+    "audio_too_short": "Audio recording is too short. Please speak for at least 1 second.",
+    "audio_too_long": "Audio recording is too long. Please keep it under 30 seconds.",
+    "low_confidence": "I'm not confident about what you said. Please try speaking more clearly.",
+    "no_audio": "No audio detected. Please check your microphone.",
+    "service_unavailable": "Voice service is temporarily unavailable. Please try again later."
+  },
+  "settings": {
+    "title": "Voice Settings",
+    "enable_voice": "Enable Voice Input",
+    "noise_reduction": "Noise Reduction",
+    "auto_stop": "Auto Stop Recording",
+    "push_to_talk": "Push to Talk Mode",
+    "voice_gender": "Voice Gender",
+    "male": "Male",
+    "female": "Female",
+    "audio_quality": "Audio Quality",
+    "fast": "Fast",
+    "standard": "Standard", 
+    "high": "High Quality"
+  },
+  "tutorial": {
+    "title": "Voice Assistant Tutorial",
+    "step1": "Tap the microphone button to start speaking",
+    "step2": "Speak clearly in your preferred language",
+    "step3": "Wait for the system to process your request",
+    "step4": "Listen to the response or read the transcription",
+    "tips": {
+      "title": "Tips for Better Recognition",
+      "tip1": "Speak clearly and at normal pace",
+      "tip2": "Reduce background noise when possible",
+      "tip3": "Use simple, direct phrases",
+      "tip4": "Wait for the beep before speaking"
+    }
+  }
+}

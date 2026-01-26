@@ -1,0 +1,62 @@
+{
+  "app": {
+    "name": "মার্কেট ম্যানিয়া",
+    "tagline": "সবার জন্য ন্যায্য দাম"
+  },
+  "navigation": {
+    "home": "হোম",
+    "dashboard": "ড্যাশবোর্ড",
+    "ppi": "দাম যাচাই",
+    "fpc": "সার্টিফিকেট",
+    "profile": "প্রোফাইল",
+    "settings": "সেটিংস"
+  },
+  "actions": {
+    "submit": "জমা দিন",
+    "cancel": "বাতিল করুন",
+    "save": "সেভ করুন",
+    "delete": "মুছে ফেলুন",
+    "edit": "সম্পাদনা করুন",
+    "back": "পিছনে",
+    "next": "পরবর্তী",
+    "retry": "আবার চেষ্টা করুন",
+    "refresh": "রিফ্রেশ করুন",
+    "share": "শেয়ার করুন",
+    "scan": "QR কোড স্ক্যান করুন",
+    "generate": "তৈরি করুন",
+    "verify": "যাচাই করুন"
+  },
+  "status": {
+    "loading": "লোড হচ্ছে...",
+    "success": "সফল",
+    "error": "ত্রুটি",
+    "warning": "সতর্কতা",
+    "info": "তথ্য",
+    "offline": "অফলাইন",
+    "online": "অনলাইন",
+    "syncing": "সিঙ্ক হচ্ছে...",
+    "expired": "মেয়াদ শেষ",
+    "valid": "বৈধ",
+    "invalid": "অবৈধ"
+  },
+  "units": {
+    "kg": "কেজি",
+    "quintal": "কুইন্টাল",
+    "liter": "লিটার",
+    "piece": "পিস",
+    "dozen": "ডজন"
+  },
+  "currency": {
+    "rupees": "₹",
+    "format": "₹{{amount}}"
+  },
+  "time": {
+    "now": "এখন",
+    "minutes_ago": "{{count}} মিনিট আগে",
+    "minutes_ago_plural": "{{count}} মিনিট আগে",
+    "hours_ago": "{{count}} ঘন্টা আগে",
+    "hours_ago_plural": "{{count}} ঘন্টা আগে",
+    "days_ago": "{{count}} দিন আগে",
+    "days_ago_plural": "{{count}} দিন আগে"
+  }
+}

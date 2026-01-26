@@ -1,0 +1,62 @@
+{
+  "app": {
+    "name": "मार्केट मेनिया",
+    "tagline": "सभी के लिए उचित कीमत"
+  },
+  "navigation": {
+    "home": "होम",
+    "dashboard": "डैशबोर्ड",
+    "ppi": "कीमत जांच",
+    "fpc": "प्रमाणपत्र",
+    "profile": "प्रोफाइल",
+    "settings": "सेटिंग्स"
+  },
+  "actions": {
+    "submit": "जमा करें",
+    "cancel": "रद्द करें",
+    "save": "सेव करें",
+    "delete": "हटाएं",
+    "edit": "संपादित करें",
+    "back": "वापस",
+    "next": "आगे",
+    "retry": "फिर कोशिश करें",
+    "refresh": "रिफ्रेश करें",
+    "share": "साझा करें",
+    "scan": "QR कोड स्कैन करें",
+    "generate": "बनाएं",
+    "verify": "सत्यापित करें"
+  },
+  "status": {
+    "loading": "लोड हो रहा है...",
+    "success": "सफल",
+    "error": "त्रुटि",
+    "warning": "चेतावनी",
+    "info": "जानकारी",
+    "offline": "ऑफलाइन",
+    "online": "ऑनलाइन",
+    "syncing": "सिंक हो रहा है...",
+    "expired": "समाप्त",
+    "valid": "वैध",
+    "invalid": "अवैध"
+  },
+  "units": {
+    "kg": "किलो",
+    "quintal": "क्विंटल",
+    "liter": "लीटर",
+    "piece": "पीस",
+    "dozen": "दर्जन"
+  },
+  "currency": {
+    "rupees": "₹",
+    "format": "₹{{amount}}"
+  },
+  "time": {
+    "now": "अभी",
+    "minutes_ago": "{{count}} मिनट पहले",
+    "minutes_ago_plural": "{{count}} मिनट पहले",
+    "hours_ago": "{{count}} घंटे पहले",
+    "hours_ago_plural": "{{count}} घंटे पहले",
+    "days_ago": "{{count}} दिन पहले",
+    "days_ago_plural": "{{count}} दिन पहले"
+  }
+}

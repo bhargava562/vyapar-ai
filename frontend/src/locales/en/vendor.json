@@ -1,0 +1,78 @@
+{
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome back, {{name}}!",
+    "quick_actions": "Quick Actions",
+    "recent_activity": "Recent Activity",
+    "stats": {
+      "total_fpcs": "Total Certificates",
+      "scans_today": "Scans Today",
+      "points_earned": "Points Earned",
+      "market_rank": "Market Rank"
+    }
+  },
+  "profile": {
+    "title": "Profile",
+    "personal_info": "Personal Information",
+    "market_info": "Market Information",
+    "preferences": "Preferences",
+    "points_history": "Points History",
+    "setup": {
+      "title": "Complete Your Profile",
+      "subtitle": "Help us set up your vendor profile",
+      "step_1": "Basic Information",
+      "step_2": "Market Details",
+      "step_3": "Preferences",
+      "completion": "Profile Completion: {{percentage}}%"
+    },
+    "fields": {
+      "name": "Full Name",
+      "name_placeholder": "Enter your full name",
+      "stall_id": "Stall ID",
+      "stall_id_placeholder": "Enter your stall number (optional)",
+      "market_location": "Market Location",
+      "market_location_placeholder": "Enter your market name and location",
+      "email": "Email Address",
+      "email_placeholder": "Enter your email (optional)",
+      "phone_number": "Phone Number",
+      "preferred_language": "Preferred Language",
+      "language_help": "Choose your preferred language for the app"
+    },
+    "actions": {
+      "save": "Save Profile",
+      "update": "Update Profile",
+      "cancel": "Cancel",
+      "delete": "Delete Profile",
+      "complete_setup": "Complete Setup",
+      "skip_optional": "Skip Optional Fields"
+    },
+    "messages": {
+      "save_success": "Profile saved successfully!",
+      "update_success": "Profile updated successfully!",
+      "delete_success": "Profile deleted successfully",
+      "save_error": "Failed to save profile. Please try again.",
+      "required_fields": "Please fill in all required fields",
+      "invalid_email": "Please enter a valid email address"
+    },
+    "voice": {
+      "speak_name": "Speak your name",
+      "speak_location": "Speak your market location",
+      "listening": "Listening...",
+      "processing": "Processing voice input...",
+      "try_again": "Try speaking again",
+      "use_keyboard": "Use keyboard instead"
+    },
+    "languages": {
+      "hi": "Hindi (हिंदी)",
+      "en": "English",
+      "ta": "Tamil (தமிழ்)",
+      "te": "Telugu (తెలుగు)",
+      "bn": "Bengali (বাংলা)",
+      "mr": "Marathi (मराठी)",
+      "gu": "Gujarati (ગુજરાતી)",
+      "kn": "Kannada (ಕನ್ನಡ)",
+      "ml": "Malayalam (മലയാളം)",
+      "or": "Odia (ଓଡ଼ିଆ)"
+    }
+  }
+}

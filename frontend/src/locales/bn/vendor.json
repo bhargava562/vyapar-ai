@@ -1,0 +1,42 @@
+{
+  "profile": {
+    "title": "ব্যবসায়ী প্রোফাইল",
+    "edit_profile": "প্রোফাইল সম্পাদনা করুন",
+    "name": "নাম",
+    "stall_id": "স্টল ID",
+    "market_location": "বাজারের অবস্থান",
+    "phone": "ফোন নম্বর",
+    "email": "ইমেইল",
+    "language": "ভাষা",
+    "points": "পয়েন্ট",
+    "member_since": "সদস্য হওয়ার তারিখ",
+    "last_active": "শেষ সক্রিয়"
+  },
+  "dashboard": {
+    "welcome": "স্বাগতম, {{name}}",
+    "quick_actions": "দ্রুত কাজ",
+    "check_price": "দাম যাচাই করুন",
+    "generate_certificate": "সার্টিফিকেট তৈরি করুন",
+    "submit_price": "দাম জমা দিন",
+    "recent_activity": "সাম্প্রতিক কার্যকলাপ",
+    "no_activity": "এখনও কোনো কার্যকলাপ নেই",
+    "stats": {
+      "total_certificates": "মোট সার্টিফিকেট",
+      "price_submissions": "দাম জমা",
+      "points_earned": "অর্জিত পয়েন্ট",
+      "market_rank": "বাজার র‍্যাঙ্ক"
+    }
+  },
+  "products": {
+    "search_placeholder": "পণ্য খুঁজুন...",
+    "category": "বিভাগ",
+    "all_categories": "সব বিভাগ",
+    "vegetables": "সবজি",
+    "fruits": "ফল",
+    "grains": "শস্য",
+    "dairy": "দুগ্ধজাত",
+    "meat": "মাংস",
+    "pulses": "ডাল",
+    "spices": "মসলা"
+  }
+}

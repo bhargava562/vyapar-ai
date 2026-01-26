@@ -1,0 +1,34 @@
+{
+  "title": "ధర శక్తి సూచిక (PPI)",
+  "subtitle": "మీ బేరసారాల శక్తిని తెలుసుకోండి",
+  "check_price": "ధర తనిఖీ చేయండి",
+  "product_label": "ఉత్పాదకం",
+  "quantity_label": "పరిమాణం",
+  "current_price_label": "ప్రస్తుత ధర",
+  "calculate": "లెక్కించండి",
+  "ppi_score": "PPI స్కోర్",
+  "confidence": "విశ్వసనీయత",
+  "recommendation": "సిఫార్సు",
+  "factors": "ప్రభావిత కారకాలు",
+  "explanation": "వివరణ",
+  "ranges": {
+    "low": "తక్కువ (0-30)",
+    "medium": "మధ్యమ (30-70)",
+    "high": "ఎక్కువ (70-100)"
+  },
+  "recommendations": {
+    "accept_lower": "తక్కువ ధరలను అంగీకరించండి",
+    "moderate_pricing": "మధ్యమ ధర నిర్ణయం",
+    "maintain_higher": "ఎక్కువ ధరలను కొనసాగించండి"
+  },
+  "factors_types": {
+    "wholesale": "టోకు ధర",
+    "weather": "వాతావరణం",
+    "crowdsourced": "కమ్యూనిటీ డేటా",
+    "historical": "చారిత్రక ధోరణులు"
+  },
+  "loading": "PPI లెక్కిస్తోంది...",
+  "error": "PPI లెక్కించడంలో లోపం",
+  "expired": "PPI గడువు ముగిసింది",
+  "refresh": "రిఫ్రెష్ చేయండి"
+}

@@ -1,0 +1,13 @@
+{
+  "enabled": true,
+  "name": "Documentation and Management Hook",
+  "description": "After each agent completion, analyzes all files to update README.md documentation based on code understanding and manages .gitignore to include secrets and module files while preserving .kiro files",
+  "version": "1",
+  "when": {
+    "type": "agentStop"
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Analyze all files in the workspace and: 1) Update README.md with comprehensive documentation based on the current codebase structure and functionality, 2) Update .gitignore to include common secret files (*.env, *.key, *.pem, config/secrets.*, etc.) and module directories (node_modules/, __pycache__/, .venv/, etc.) while ensuring .kiro/ directory and files are NOT ignored"
+  }
+}

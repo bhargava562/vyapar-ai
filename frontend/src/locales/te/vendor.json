@@ -1,0 +1,42 @@
+{
+  "profile": {
+    "title": "వ్యాపారి ప్రొఫైల్",
+    "edit_profile": "ప్రొఫైల్ సవరించండి",
+    "name": "పేరు",
+    "stall_id": "స్టాల్ ID",
+    "market_location": "మార్కెట్ లొకేషన్",
+    "phone": "ఫోన్ నంబర్",
+    "email": "ఇమెయిల్",
+    "language": "భాష",
+    "points": "పాయింట్లు",
+    "member_since": "సభ్యుడు అయిన తేదీ",
+    "last_active": "చివరిసారి యాక్టివ్"
+  },
+  "dashboard": {
+    "welcome": "స్వాగతం, {{name}}",
+    "quick_actions": "త్వరిత చర్యలు",
+    "check_price": "ధర తనిఖీ చేయండి",
+    "generate_certificate": "సర్టిఫికేట్ జనరేట్ చేయండి",
+    "submit_price": "ధర సమర్పించండి",
+    "recent_activity": "ఇటీవలి కార్యకలాపాలు",
+    "no_activity": "ఇంకా కార్యకలాపాలు లేవు",
+    "stats": {
+      "total_certificates": "మొత్తం సర్టిఫికేట్లు",
+      "price_submissions": "ధర సమర్పణలు",
+      "points_earned": "సంపాదించిన పాయింట్లు",
+      "market_rank": "మార్కెట్ ర్యాంక్"
+    }
+  },
+  "products": {
+    "search_placeholder": "ఉత్పాదకాలను వెతకండి...",
+    "category": "వర్గం",
+    "all_categories": "అన్ని వర్గాలు",
+    "vegetables": "కూరగాయలు",
+    "fruits": "పండ్లు",
+    "grains": "ధాన్యాలు",
+    "dairy": "పాల ఉత్పాదకాలు",
+    "meat": "మాంసం",
+    "pulses": "పప్పులు",
+    "spices": "మసాలాలు"
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "app": {
+    "name": "Market Mania",
+    "tagline": "Fair prices for everyone"
+  },
+  "navigation": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "ppi": "Price Check",
+    "fpc": "Certificates",
+    "profile": "Profile",
+    "settings": "Settings"
+  },
+  "actions": {
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "next": "Next",
+    "retry": "Retry",
+    "refresh": "Refresh",
+    "share": "Share",
+    "scan": "Scan QR Code",
+    "generate": "Generate",
+    "verify": "Verify"
+  },
+  "status": {
+    "loading": "Loading...",
+    "success": "Success",
+    "error": "Error",
+    "warning": "Warning",
+    "info": "Information",
+    "offline": "Offline",
+    "online": "Online",
+    "syncing": "Syncing...",
+    "expired": "Expired",
+    "valid": "Valid",
+    "invalid": "Invalid"
+  },
+  "units": {
+    "kg": "kg",
+    "quintal": "quintal",
+    "liter": "liter",
+    "piece": "piece",
+    "dozen": "dozen"
+  },
+  "currency": {
+    "rupees": "₹",
+    "format": "₹{{amount}}"
+  },
+  "time": {
+    "now": "now",
+    "minutes_ago": "{{count}} minute ago",
+    "minutes_ago_plural": "{{count}} minutes ago",
+    "hours_ago": "{{count}} hour ago",
+    "hours_ago_plural": "{{count}} hours ago",
+    "days_ago": "{{count}} day ago",
+    "days_ago_plural": "{{count}} days ago"
+  }
+}
