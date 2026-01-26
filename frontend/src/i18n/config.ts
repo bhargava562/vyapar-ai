@@ -90,6 +90,72 @@ i18n
 
     interpolation: {
       escapeValue: false, // React already escapes values
+      format: (value: any, format?: string, lng?: string): string => {
+        if (format === 'currency') {
+          // Indian currency formatting with proper locale
+          const localeMap: Record<string, string> = {
+            'hi': 'hi-IN',
+            'ta': 'ta-IN', 
+            'te': 'te-IN',
+            'bn': 'bn-IN',
+            'en': 'en-IN'
+          }
+          return new Intl.NumberFormat(localeMap[lng || 'en'] || 'en-IN', {
+            style: 'currency',
+            currency: 'INR',
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 2,
+          }).format(Number(value))
+        }
+        
+        if (format === 'number') {
+          // Indian number formatting (lakhs, crores)
+          const localeMap: Record<string, string> = {
+            'hi': 'hi-IN',
+            'ta': 'ta-IN',
+            'te': 'te-IN', 
+            'bn': 'bn-IN',
+            'en': 'en-IN'
+          }
+          return new Intl.NumberFormat(localeMap[lng || 'en'] || 'en-IN', {
+            maximumFractionDigits: 2,
+          }).format(Number(value))
+        }
+        
+        if (format === 'date') {
+          // Indian date formatting
+          const localeMap: Record<string, string> = {
+            'hi': 'hi-IN',
+            'ta': 'ta-IN',
+            'te': 'te-IN',
+            'bn': 'bn-IN', 
+            'en': 'en-IN'
+          }
+          return new Intl.DateTimeFormat(localeMap[lng || 'en'] || 'en-IN', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          }).format(new Date(value))
+        }
+        
+        if (format === 'time') {
+          // Indian time formatting (12-hour format)
+          const localeMap: Record<string, string> = {
+            'hi': 'hi-IN',
+            'ta': 'ta-IN',
+            'te': 'te-IN',
+            'bn': 'bn-IN',
+            'en': 'en-IN'
+          }
+          return new Intl.DateTimeFormat(localeMap[lng || 'en'] || 'en-IN', {
+            hour: 'numeric',
+            minute: 'numeric',
+            hour12: true,
+          }).format(new Date(value))
+        }
+        
+        return String(value)
+      }
     },
 
     // Namespace separation
@@ -100,81 +166,13 @@ i18n
       useSuspense: false,
     },
 
-    // Custom formatting for Indian context
-    format: (value, format, lng) => {
-      if (format === 'currency') {
-        // Indian currency formatting with proper locale
-        const localeMap: Record<string, string> = {
-          'hi': 'hi-IN',
-          'ta': 'ta-IN', 
-          'te': 'te-IN',
-          'bn': 'bn-IN',
-          'en': 'en-IN'
-        }
-        return new Intl.NumberFormat(localeMap[lng] || 'en-IN', {
-          style: 'currency',
-          currency: 'INR',
-          minimumFractionDigits: 0,
-          maximumFractionDigits: 2,
-        }).format(value)
-      }
-      
-      if (format === 'number') {
-        // Indian number formatting (lakhs, crores)
-        const localeMap: Record<string, string> = {
-          'hi': 'hi-IN',
-          'ta': 'ta-IN',
-          'te': 'te-IN', 
-          'bn': 'bn-IN',
-          'en': 'en-IN'
-        }
-        return new Intl.NumberFormat(localeMap[lng] || 'en-IN', {
-          maximumFractionDigits: 2,
-        }).format(value)
-      }
-      
-      if (format === 'date') {
-        // Indian date formatting
-        const localeMap: Record<string, string> = {
-          'hi': 'hi-IN',
-          'ta': 'ta-IN',
-          'te': 'te-IN',
-          'bn': 'bn-IN', 
-          'en': 'en-IN'
-        }
-        return new Intl.DateTimeFormat(localeMap[lng] || 'en-IN', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-        }).format(new Date(value))
-      }
-      
-      if (format === 'time') {
-        // Indian time formatting (12-hour format)
-        const localeMap: Record<string, string> = {
-          'hi': 'hi-IN',
-          'ta': 'ta-IN',
-          'te': 'te-IN',
-          'bn': 'bn-IN',
-          'en': 'en-IN'
-        }
-        return new Intl.DateTimeFormat(localeMap[lng] || 'en-IN', {
-          hour: 'numeric',
-          minute: 'numeric',
-          hour12: true,
-        }).format(new Date(value))
-      }
-      
-      return value
-    },
-
     // Pluralization rules for Indian languages
     pluralSeparator: '_',
     contextSeparator: '_',
     
     // Load missing translations
     saveMissing: process.env.NODE_ENV === 'development',
-    missingKeyHandler: (lng, ns, key) => {
+    missingKeyHandler: (lng: readonly string[], ns: string, key: string) => {
       if (process.env.NODE_ENV === 'development') {
         console.warn(`Missing translation: ${lng}.${ns}.${key}`)
       }
