@@ -16,10 +16,10 @@ const mockSpeechRecognition = {
   start: vi.fn(),
   stop: vi.fn(),
   abort: vi.fn(),
-  onstart: null,
-  onend: null,
-  onresult: null,
-  onerror: null,
+  onstart: vi.fn(),
+  onend: vi.fn(),
+  onresult: vi.fn(),
+  onerror: vi.fn(),
   addEventListener: vi.fn(),
   removeEventListener: vi.fn(),
   dispatchEvent: vi.fn(),
@@ -72,7 +72,7 @@ describe('VoiceInput', () => {
     // Temporarily remove SpeechRecognition support
     const originalSpeechRecognition = window.SpeechRecognition;
     const originalWebkitSpeechRecognition = window.webkitSpeechRecognition;
-    
+
     delete (window as any).SpeechRecognition;
     delete (window as any).webkitSpeechRecognition;
 
@@ -190,10 +190,10 @@ describe('VoiceInput', () => {
     );
 
     const button = screen.getByRole('button');
-    
+
     // Simulate start listening
     fireEvent.click(button);
-    
+
     // Trigger onstart callback to set listening state
     if (mockSpeechRecognition.onstart) {
       mockSpeechRecognition.onstart({} as any);

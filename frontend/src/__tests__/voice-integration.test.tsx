@@ -8,7 +8,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import VoiceInput from '../components/VoiceInput';
 import VoiceOverlay from '../components/VoiceOverlay';
-import VoiceDemo from '../components/VoiceDemo';
+// import VoiceDemo from '../components/VoiceDemo';
 import { voiceService } from '../services/voiceService';
 import '../test/setup';
 
@@ -62,13 +62,16 @@ const mockGetUserMedia = vi.fn();
 beforeEach(() => {
   // Reset all mocks
   vi.clearAllMocks();
-  
+
   // Mock browser APIs
   global.MediaRecorder = vi.fn(() => mockMediaRecorder) as any;
-  global.navigator.mediaDevices = {
-    getUserMedia: mockGetUserMedia
-  } as any;
-  
+  Object.defineProperty(global.navigator, 'mediaDevices', {
+    writable: true,
+    value: {
+      getUserMedia: mockGetUserMedia
+    }
+  });
+
   // Mock AudioContext
   global.AudioContext = vi.fn(() => ({
     createMediaStreamSource: vi.fn(),
@@ -81,18 +84,18 @@ beforeEach(() => {
     close: vi.fn(),
     state: 'running'
   })) as any;
-  
+
   // Mock URL.createObjectURL
   global.URL.createObjectURL = vi.fn(() => 'mock-audio-url');
   global.URL.revokeObjectURL = vi.fn();
-  
+
   // Mock Audio constructor
   global.Audio = vi.fn(() => ({
     play: vi.fn().mockResolvedValue(undefined),
     onended: null,
     onerror: null
   })) as any;
-  
+
   // Setup default mock implementations
   vi.mocked(voiceService.initialize).mockResolvedValue(true);
   vi.mocked(voiceService.requestMicrophonePermission).mockResolvedValue(true);
@@ -113,7 +116,7 @@ describe('VoiceInput Component', () => {
         useBhashini={true}
       />
     );
-    
+
     const button = screen.getByRole('button');
     expect(button).toBeInTheDocument();
   });
@@ -125,14 +128,14 @@ describe('VoiceInput Component', () => {
         useBhashini={true}
       />
     );
-    
+
     const indicator = screen.getByTitle('Bhashini AI powered');
     expect(indicator).toBeInTheDocument();
   });
 
   it('calls onVoiceResult when transcription is successful', async () => {
     const mockOnVoiceResult = vi.fn();
-    
+
     vi.mocked(voiceService.transcribeAudio).mockResolvedValue({
       success: true,
       transcription: 'Hello world',
@@ -146,14 +149,14 @@ describe('VoiceInput Component', () => {
         useBhashini={true}
       />
     );
-    
+
     const button = screen.getByRole('button');
-    
+
     // Start recording
     await act(async () => {
       fireEvent.click(button);
     });
-    
+
     // Wait for initialization
     await waitFor(() => {
       expect(voiceService.startRecording).toHaveBeenCalled();
@@ -171,7 +174,7 @@ describe('VoiceInput Component', () => {
 
   it('handles recording errors gracefully', async () => {
     const mockOnError = vi.fn();
-    
+
     vi.mocked(voiceService.startRecording).mockRejectedValue(new Error('Microphone not available'));
 
     render(
@@ -181,9 +184,9 @@ describe('VoiceInput Component', () => {
         useBhashini={true}
       />
     );
-    
+
     const button = screen.getByRole('button');
-    
+
     await act(async () => {
       fireEvent.click(button);
     });
@@ -200,9 +203,9 @@ describe('VoiceInput Component', () => {
         useBhashini={true}
       />
     );
-    
+
     const button = screen.getByRole('button');
-    
+
     await act(async () => {
       fireEvent.click(button);
     });
@@ -218,16 +221,16 @@ describe('VoiceInput Component', () => {
 describe('VoiceOverlay Component', () => {
   it('renders voice overlay button', () => {
     render(<VoiceOverlay />);
-    
+
     const button = screen.getByRole('button');
     expect(button).toBeInTheDocument();
   });
 
   it('expands panel when recording starts', async () => {
     render(<VoiceOverlay />);
-    
+
     const button = screen.getByRole('button');
-    
+
     await act(async () => {
       fireEvent.click(button);
     });
@@ -239,7 +242,7 @@ describe('VoiceOverlay Component', () => {
 
   it('processes voice query and shows results', async () => {
     const mockOnVoiceResult = vi.fn();
-    
+
     vi.mocked(voiceService.processVoiceQuery).mockResolvedValue({
       success: true,
       transcription: 'What is the price of tomatoes?',
@@ -254,14 +257,14 @@ describe('VoiceOverlay Component', () => {
     });
 
     render(<VoiceOverlay onVoiceResult={mockOnVoiceResult} />);
-    
+
     const button = screen.getByRole('button');
-    
+
     // Start and stop recording
     await act(async () => {
       fireEvent.click(button);
     });
-    
+
     await act(async () => {
       fireEvent.click(button);
     });
@@ -278,7 +281,7 @@ describe('VoiceOverlay Component', () => {
 
   it('handles voice processing errors', async () => {
     const mockOnError = vi.fn();
-    
+
     vi.mocked(voiceService.processVoiceQuery).mockResolvedValue({
       success: false,
       error: 'Processing failed',
@@ -286,13 +289,13 @@ describe('VoiceOverlay Component', () => {
     });
 
     render(<VoiceOverlay onError={mockOnError} />);
-    
+
     const button = screen.getByRole('button');
-    
+
     await act(async () => {
       fireEvent.click(button);
     });
-    
+
     await act(async () => {
       fireEvent.click(button);
     });
@@ -306,19 +309,19 @@ describe('VoiceOverlay Component', () => {
 describe('Voice Service Integration', () => {
   it('initializes voice service correctly', async () => {
     await voiceService.initialize();
-    
+
     expect(voiceService.initialize).toHaveBeenCalled();
   });
 
   it('requests microphone permission', async () => {
     await voiceService.requestMicrophonePermission();
-    
+
     expect(voiceService.requestMicrophonePermission).toHaveBeenCalled();
   });
 
   it('handles ASR transcription', async () => {
     const mockAudioBlob = new Blob(['mock audio'], { type: 'audio/wav' });
-    
+
     vi.mocked(voiceService.transcribeAudio).mockResolvedValue({
       success: true,
       transcription: 'Test transcription',
@@ -327,7 +330,7 @@ describe('Voice Service Integration', () => {
     });
 
     const result = await voiceService.transcribeAudio(mockAudioBlob, 'hi');
-    
+
     expect(result.success).toBe(true);
     expect(result.transcription).toBe('Test transcription');
     expect(result.confidence).toBe(0.85);
@@ -342,7 +345,7 @@ describe('Voice Service Integration', () => {
     });
 
     const result = await voiceService.synthesizeSpeech('Hello world', 'hi');
-    
+
     expect(result.success).toBe(true);
     expect(result.text).toBe('Hello world');
     expect(result.audioData).toBeInstanceOf(ArrayBuffer);
@@ -350,7 +353,7 @@ describe('Voice Service Integration', () => {
 
   it('processes complete voice query', async () => {
     const mockAudioBlob = new Blob(['mock audio'], { type: 'audio/wav' });
-    
+
     vi.mocked(voiceService.processVoiceQuery).mockResolvedValue({
       success: true,
       transcription: 'Price query test',
@@ -365,7 +368,7 @@ describe('Voice Service Integration', () => {
     });
 
     const result = await voiceService.processVoiceQuery(mockAudioBlob, 'hi');
-    
+
     expect(result.success).toBe(true);
     expect(result.transcription).toBe('Price query test');
     expect(result.intent?.intent).toBe('price_query');
@@ -378,7 +381,7 @@ describe('Multilingual Voice Support', () => {
   languages.forEach(language => {
     it(`supports ${language} language for ASR`, async () => {
       const mockAudioBlob = new Blob(['mock audio'], { type: 'audio/wav' });
-      
+
       vi.mocked(voiceService.transcribeAudio).mockResolvedValue({
         success: true,
         transcription: `Test in ${language}`,
@@ -387,7 +390,7 @@ describe('Multilingual Voice Support', () => {
       });
 
       const result = await voiceService.transcribeAudio(mockAudioBlob, language);
-      
+
       expect(result.language).toBe(language);
       expect(result.success).toBe(true);
     });
@@ -401,7 +404,7 @@ describe('Multilingual Voice Support', () => {
       });
 
       const result = await voiceService.synthesizeSpeech(`Test in ${language}`, language);
-      
+
       expect(result.language).toBe(language);
       expect(result.success).toBe(true);
     });
@@ -421,7 +424,7 @@ describe('Error Handling', () => {
 
     const mockAudioBlob = new Blob(['mock audio'], { type: 'audio/wav' });
     const result = await voiceService.transcribeAudio(mockAudioBlob, 'hi');
-    
+
     expect(result.success).toBe(false);
     expect(result.error).toBe('Network error');
     expect(result.fallback).toBe(true);
@@ -429,9 +432,9 @@ describe('Error Handling', () => {
 
   it('handles microphone permission denial', async () => {
     mockGetUserMedia.mockRejectedValue(new Error('Permission denied'));
-    
+
     vi.mocked(voiceService.requestMicrophonePermission).mockResolvedValue(false);
-    
+
     const hasPermission = await voiceService.requestMicrophonePermission();
     expect(hasPermission).toBe(false);
   });
@@ -445,7 +448,7 @@ describe('Error Handling', () => {
 
     const mockAudioBlob = new Blob(['mock audio'], { type: 'audio/wav' });
     const result = await voiceService.processVoiceQuery(mockAudioBlob, 'hi');
-    
+
     expect(result.success).toBe(false);
     expect(result.error).toBe('Processing timeout');
   });
@@ -454,7 +457,7 @@ describe('Error Handling', () => {
 describe('Performance and Caching', () => {
   it('caches ASR results for identical audio', async () => {
     const mockAudioBlob = new Blob(['identical audio'], { type: 'audio/wav' });
-    
+
     vi.mocked(voiceService.transcribeAudio).mockResolvedValue({
       success: true,
       transcription: 'Cached result',
@@ -464,10 +467,10 @@ describe('Performance and Caching', () => {
 
     // First call
     await voiceService.transcribeAudio(mockAudioBlob, 'hi');
-    
+
     // Second call with same audio should use cache
     await voiceService.transcribeAudio(mockAudioBlob, 'hi');
-    
+
     // Should only be called once due to caching
     expect(voiceService.transcribeAudio).toHaveBeenCalledTimes(2);
   });
@@ -475,7 +478,7 @@ describe('Performance and Caching', () => {
   it('handles concurrent voice requests', async () => {
     const mockAudioBlob1 = new Blob(['audio 1'], { type: 'audio/wav' });
     const mockAudioBlob2 = new Blob(['audio 2'], { type: 'audio/wav' });
-    
+
     vi.mocked(voiceService.transcribeAudio)
       .mockResolvedValueOnce({
         success: true,
@@ -494,7 +497,7 @@ describe('Performance and Caching', () => {
       voiceService.transcribeAudio(mockAudioBlob1, 'hi'),
       voiceService.transcribeAudio(mockAudioBlob2, 'hi')
     ]);
-    
+
     expect(result1.transcription).toBe('Result 1');
     expect(result2.transcription).toBe('Result 2');
   });
