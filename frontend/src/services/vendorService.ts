@@ -3,7 +3,9 @@
  * Handles API calls for vendor CRUD operations
  */
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1';
+import { API_V1_URL } from '../config';
+
+const API_BASE_URL = API_V1_URL;
 
 export interface VendorProfile {
   id: string;
@@ -73,17 +75,17 @@ class VendorService {
 
   private async handleResponse<T>(response: Response): Promise<ApiResponse<T>> {
     const status = response.status;
-    
+
     try {
       const data = await response.json();
-      
+
       if (!response.ok) {
         return {
           error: data.detail || `HTTP ${status}: ${response.statusText}`,
           status
         };
       }
-      
+
       return { data, status };
     } catch (error) {
       return {

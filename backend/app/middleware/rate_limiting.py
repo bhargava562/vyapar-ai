@@ -242,5 +242,95 @@ class BruteForceProtection:
         except Exception as e:
             logger.error(f"Failed to clear failed attempts: {e}")
 
+
+def rate_limit(calls: int = 60, period: int = 60):
+    """
+    Endpoint-level rate limiting decorator.
+    
+    Provides fine-grained rate limiting for individual endpoints.
+    Uses Redis for distributed rate limit tracking.
+    
+    Args:
+        calls: Maximum number of allowed calls within the period
+        period: Time window in seconds for rate limiting
+        
+    Returns:
+        Decorator function that wraps the endpoint with rate limiting logic
+        
+    Usage:
+        @router.post("/endpoint")
+        @rate_limit(calls=30, period=60)  # 30 calls per minute
+        async def my_endpoint():
+            ...
+            
+    Note:
+        This decorator checks the rate limit before the endpoint executes.
+        If the limit is exceeded, it raises an HTTP 429 Too Many Requests error.
+    """
+    from functools import wraps
+    
+    def decorator(func):
+        @wraps(func)
+        async def wrapper(*args, **kwargs):
+            # Extract the request object from kwargs or args
+            request = kwargs.get('request')
+            if not request:
+                # Try to find Request in args (for dependency injection scenarios)
+                for arg in args:
+                    if isinstance(arg, Request):
+                        request = arg
+                        break
+            
+            # Get client identifier
+            if request:
+                client_ip = request.client.host if request.client else "unknown"
+                endpoint = request.url.path
+            else:
+                client_ip = "unknown"
+                endpoint = func.__name__
+            
+            identifier = f"{client_ip}:{endpoint}"
+            
+            try:
+                redis = get_redis()
+                current_time = int(time.time())
+                window_key = current_time // period
+                cache_key = f"rate_limit:endpoint:{identifier}:{window_key}"
+                
+                # Get current count
+                current_count = await redis.get(cache_key)
+                current_count = int(current_count) if current_count else 0
+                
+                # Check if limit exceeded
+                if current_count >= calls:
+                    reset_time = ((window_key + 1) * period) - current_time
+                    raise HTTPException(
+                        status_code=429,
+                        detail=f"Rate limit exceeded. Try again in {reset_time} seconds.",
+                        headers={
+                            "X-RateLimit-Limit": str(calls),
+                            "X-RateLimit-Remaining": "0",
+                            "X-RateLimit-Reset": str((window_key + 1) * period),
+                            "Retry-After": str(reset_time)
+                        }
+                    )
+                
+                # Increment counter
+                await redis.incr(cache_key)
+                await redis.expire(cache_key, period)
+                
+            except HTTPException:
+                raise
+            except Exception as e:
+                # Log error but allow request (fail-open for availability)
+                logger.error(f"Rate limit check failed for {identifier}: {e}")
+            
+            # Execute the wrapped function
+            return await func(*args, **kwargs)
+        
+        return wrapper
+    return decorator
+
+
 # Global brute force protection instance
 brute_force_protection = BruteForceProtection()

@@ -11,7 +11,7 @@ import logging
 from typing import Dict, List, Optional, Tuple, Any
 from datetime import datetime, timedelta
 from app.core.config import settings
-from app.core.redis_client import get_redis_client
+from app.core.redis_client import get_redis
 
 logger = logging.getLogger(__name__)
 
@@ -21,7 +21,7 @@ class BhashiniService:
     def __init__(self):
         self.api_key = settings.BHASHINI_API_KEY
         self.base_url = "https://meity-hf.hf.space"  # Bhashini API endpoint
-        self.redis_client = get_redis_client()
+        self.redis_client = get_redis()
         
         # Language mapping for Bhashini
         self.language_codes = {

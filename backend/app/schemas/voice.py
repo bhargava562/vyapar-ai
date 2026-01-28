@@ -2,7 +2,7 @@
 Pydantic schemas for voice processing operations
 """
 
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 from typing import List, Optional, Dict, Any, Union
 from datetime import datetime
 
@@ -11,7 +11,8 @@ class VoiceProcessRequest(BaseModel):
     language: str = Field(default="hi", description="Language code (hi, en, ta, etc.)")
     context: Optional[Dict[str, Any]] = Field(None, description="Additional context for intent recognition")
     
-    @validator('language')
+    @field_validator('language')
+    @classmethod
     def validate_language(cls, v):
         supported_languages = ['hi', 'en', 'ta', 'te', 'bn', 'mr', 'gu', 'kn', 'ml', 'or', 'pa', 'as']
         if v not in supported_languages:
@@ -35,14 +36,16 @@ class ASRRequest(BaseModel):
     language: str = Field(default="hi", description="Language code")
     audio_format: str = Field(default="wav", description="Audio format (wav, mp3, etc.)")
     
-    @validator('language')
+    @field_validator('language')
+    @classmethod
     def validate_language(cls, v):
         supported_languages = ['hi', 'en', 'ta', 'te', 'bn', 'mr', 'gu', 'kn', 'ml', 'or', 'pa', 'as']
         if v not in supported_languages:
             raise ValueError(f'Unsupported language: {v}')
         return v
     
-    @validator('audio_format')
+    @field_validator('audio_format')
+    @classmethod
     def validate_audio_format(cls, v):
         supported_formats = ['wav', 'mp3', 'ogg', 'flac', 'm4a']
         if v.lower() not in supported_formats:
@@ -73,27 +76,31 @@ class TTSRequest(BaseModel):
     voice_gender: str = Field(default="female", description="Voice gender (male/female)")
     audio_format: str = Field(default="wav", description="Output audio format")
     
-    @validator('language')
+    @field_validator('language')
+    @classmethod
     def validate_language(cls, v):
         supported_languages = ['hi', 'en', 'ta', 'te', 'bn', 'mr', 'gu', 'kn', 'ml', 'or']
         if v not in supported_languages:
             raise ValueError(f'Unsupported language: {v}')
         return v
     
-    @validator('voice_gender')
+    @field_validator('voice_gender')
+    @classmethod
     def validate_voice_gender(cls, v):
         if v.lower() not in ['male', 'female']:
             raise ValueError('Voice gender must be "male" or "female"')
         return v.lower()
     
-    @validator('audio_format')
+    @field_validator('audio_format')
+    @classmethod
     def validate_audio_format(cls, v):
         supported_formats = ['wav', 'mp3', 'ogg']
         if v.lower() not in supported_formats:
             raise ValueError(f'Unsupported audio format: {v}. Supported: {supported_formats}')
         return v.lower()
     
-    @validator('text')
+    @field_validator('text')
+    @classmethod
     def validate_text(cls, v):
         if not v.strip():
             raise ValueError('Text cannot be empty or only whitespace')
@@ -168,14 +175,16 @@ class VoiceOverlayConfig(BaseModel):
     noise_cancellation: bool = Field(default=True, description="Whether noise cancellation is enabled")
     push_to_talk: bool = Field(default=False, description="Whether push-to-talk mode is enabled")
     
-    @validator('position')
+    @field_validator('position')
+    @classmethod
     def validate_position(cls, v):
         valid_positions = ['top-left', 'top-right', 'bottom-left', 'bottom-right', 'center']
         if v not in valid_positions:
             raise ValueError(f'Invalid position: {v}. Valid: {valid_positions}')
         return v
     
-    @validator('size')
+    @field_validator('size')
+    @classmethod
     def validate_size(cls, v):
         valid_sizes = ['small', 'medium', 'large']
         if v not in valid_sizes:
@@ -201,14 +210,16 @@ class VoiceProcessingMode(BaseModel):
     chunk_duration: Optional[float] = Field(None, description="Chunk duration for real-time processing")
     quality: str = Field(default="standard", description="Processing quality (fast, standard, high)")
     
-    @validator('mode')
+    @field_validator('mode')
+    @classmethod
     def validate_mode(cls, v):
         valid_modes = ['real_time', 'batch', 'streaming']
         if v not in valid_modes:
             raise ValueError(f'Invalid mode: {v}. Valid: {valid_modes}')
         return v
     
-    @validator('quality')
+    @field_validator('quality')
+    @classmethod
     def validate_quality(cls, v):
         valid_qualities = ['fast', 'standard', 'high']
         if v not in valid_qualities:

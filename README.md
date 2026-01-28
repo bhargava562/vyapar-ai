@@ -148,9 +148,11 @@ frontend/
 
 ### Development with Docker (Recommended)
 
+All services (Frontend, Backend, Redis) are containerized and accessible via a **single URL** using an Nginx gateway.
+
 ```bash
 # Start all services
-docker-compose up -d
+docker-compose up -d --build
 
 # View logs
 docker-compose logs -f
@@ -158,6 +160,22 @@ docker-compose logs -f
 # Stop services
 docker-compose down
 ```
+
+#### Access Points
+| Service | Internal URL | Exposed URL |
+|---------|--------------|-------------|
+| **Frontend** | `http://frontend:3000` | `http://localhost/` |
+| **Backend API** | `http://backend:8000` | `http://localhost/api/` |
+| **Redis** | `redis:6379` | *Internal Only* |
+| **Nginx Gateway** | *N/A* | `http://localhost:80` |
+
+> **Note:** You only need to open port **80**. The backend and frontend communicate internally.
+
+#### Troubleshooting
+If you encounter issues:
+1. **Rebuild**: `docker-compose build && docker-compose up -d`
+2. **Redis Health**: `docker exec -it market-mania-redis redis-cli ping` (Should return PONG)
+
 
 ### Manual Development
 
@@ -426,18 +444,31 @@ VITE_ENABLE_OFFLINE=true
 ## 🚀 Deployment
 
 ### Production Deployment
-```bash
-# Build frontend
-cd frontend
-npm run build
 
-# Build backend Docker image
-cd backend
-docker build -t market-mania-backend .
+1. **Build and Run (Single Node)**
+   ```bash
+   cd d:\PromptChallenge\Multilingual_App
+   docker-compose up -d --build
+   ```
 
-# Deploy with Docker Compose
-docker-compose -f docker-compose.prod.yml up -d
-```
+2. **Push to Registry**
+   ```bash
+   # Login to Docker Hub
+   docker login
+
+   # Tag Images
+   docker tag multilingual_app-backend:latest your-username/market-mania-backend:latest
+   docker tag multilingual_app-frontend:latest your-username/market-mania-frontend:latest
+
+   # Push
+   docker push your-username/market-mania-backend:latest
+   docker push your-username/market-mania-frontend:latest
+   ```
+
+3. **Security Note**
+   Secrets are **NOT** included in Docker images.
+   - `.env` files are excluded via `.dockerignore`
+   - Credentials are injected at runtime via `docker-compose.yml` (using root `.env`)
 
 ### CI/CD Pipeline
 - **Automated Testing**: Backend and frontend tests on every PR
@@ -526,6 +557,251 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **FastAPI** community for excellent documentation and support
 - **React** and **TypeScript** communities for robust tooling
 - **Open Source Community** for amazing libraries and tools
+
+## 📚 Technical Documentation
+
+### Vendor Profile Management - In-Depth Architecture
+
+This section provides comprehensive technical details on how the vendor profile management system works, including data flow, API integrations, and implementation specifics.
+
+---
+
+### System Architecture Overview
+
+```mermaid
+graph TD
+    User[User / Browser] -->|http://localhost| Nginx[Nginx Gateway :80]
+    
+    subgraph Docker Network [Internal Docker Network]
+        Nginx -->|/| Frontend[Frontend :3000]
+        Nginx -->|/api/| Backend[Backend API :8000]
+        
+        Backend <--> Redis[Redis Cache :6379]
+        Backend --> Supabase[Supabase / PostgreSQL]
+    end
+    
+    Frontend -.->|Internal API Calls| Nginx
+```
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                       NGINX GATEWAY (Port 80)                       │
+│            Reverse Proxy / Load Balancer / Static Content           │
+└──────┬───────────────────────────────────────────────────────┬──────┘
+       │ /                                                     │ /api/
+       ▼                                                       ▼
+┌───────────────────────────┐           ┌─────────────────────────────┐
+│   FRONTEND (React PWA)    │           │  BACKEND (FastAPI + Python) │
+│   Internal Port: 3000     │           │  Internal Port: 8000        │
+└──────────────┬────────────┘           └──────────────┬──────────────┘
+               │                                       │
+               │         ┌───────────────────┐         │
+               └────────►│    REDIS CACHE    │◄────────┘
+                         │ Internal: 6379    │
+                         └───────────────────┘
+```
+
+---
+
+### Data Flow: Profile Creation
+
+```
+1. User Input (Voice/Keyboard)
+   │
+   ├─► VoiceInput.tsx captures speech using SpeechRecognition API
+   │   └─► Language-specific recognition (hi-IN, ta-IN, en-IN, etc.)
+   │
+   ├─► VendorProfileSetup.tsx validates form data client-side
+   │   └─► Step 1: Name/Stall → Step 2: Location → Step 3: Contact/Language
+   │
+   └─► vendorService.createProfile() sends POST request
+       │
+       ▼
+2. API Endpoint (POST /api/v1/vendor/profile)
+   │
+   ├─► JWT authentication via HTTPBearer
+   ├─► Pydantic validation (VendorProfileCreate schema)
+   │   └─► Field validators: phone format, email format, language code
+   │
+   └─► VendorService.create_profile() business logic
+       │
+       ▼
+3. Service Layer Processing
+   │
+   ├─► Check for existing profile (prevent duplicates)
+   ├─► Validate language against supported languages
+   │   └─► Supported: hi, en, ta, te, bn, mr, gu, kn, ml, or
+   ├─► Generate vendor ID (UUID)
+   ├─► Store in Supabase database
+   ├─► Cache profile in Redis (key: vendor_profile:{vendor_id})
+   ├─► Log audit event (profile_created)
+   │
+   └─► Return VendorProfile response
+       │
+       ▼
+4. Frontend receives profile data
+   └─► Updates local state and redirects to profile view
+```
+
+---
+
+### API Endpoints Detail
+
+| Endpoint | Method | Auth | Description | Request Body | Response |
+|----------|--------|------|-------------|--------------|----------|
+| `/vendor/profile` | GET | JWT | Get current vendor profile | - | VendorProfile |
+| `/vendor/profile` | POST | JWT | Create new profile | VendorProfileCreate | VendorProfile |
+| `/vendor/profile` | PUT | JWT | Update profile | VendorProfileUpdate | VendorProfile |
+| `/vendor/profile` | DELETE | JWT | Soft delete profile | - | {message: string} |
+| `/vendor/profile/completion` | GET | JWT | Get completion status | - | VendorProfileCompletion |
+| `/vendor/statistics` | GET | JWT | Get vendor stats | - | VendorStatistics |
+| `/vendor/search` | GET | JWT | Search vendors | ?q=query&limit=20 | VendorSearchResult[] |
+| `/vendor/market/{location}` | GET | JWT | Vendors by market | ?limit=50 | VendorProfile[] |
+| `/vendor/dashboard` | GET | JWT | Full dashboard data | - | DashboardResponse |
+
+---
+
+### Schema Definitions
+
+#### VendorProfile (Complete Model)
+```python
+class VendorProfile(BaseModel):
+    id: str                      # UUID, primary key
+    name: str                    # Vendor display name (1-100 chars)
+    stall_id: Optional[str]      # Market stall identifier
+    market_location: str         # Physical market location
+    phone_number: str            # Format: +91XXXXXXXXXX
+    email: Optional[str]         # Optional email address
+    preferred_language: str      # Language code (hi, en, ta, etc.)
+    points: int = 0              # Rewards/gamification points
+    status: str = "active"       # active/inactive/suspended
+    created_at: datetime         # Profile creation timestamp
+    last_active: datetime        # Last activity timestamp
+    updated_at: Optional[datetime]  # Last update timestamp
+```
+
+#### VendorProfileCompletion (Progress Tracking)
+```python
+class VendorProfileCompletion(BaseModel):
+    is_complete: bool            # All required fields filled
+    completion_percentage: int   # 0-100 completion score
+    missing_fields: List[str]    # List of empty required fields
+    completed_optional: List[str] # Filled optional fields
+    next_step: str               # Guidance message for user
+```
+
+---
+
+### Caching Strategy
+
+```
+Redis Cache Implementation:
+│
+├── Profile Cache
+│   Key: vendor_profile:{vendor_id}
+│   TTL: 3600 seconds (1 hour)
+│   Invalidation: On update/delete
+│
+├── Statistics Cache
+│   Key: vendor_stats:{vendor_id}
+│   TTL: 300 seconds (5 minutes)
+│   Invalidation: On data change
+│
+└── Search Cache
+    Key: vendor_search:{query_hash}
+    TTL: 60 seconds (1 minute)
+    Invalidation: On new vendor creation
+```
+
+---
+
+### Voice Input Integration
+
+The voice input system uses the Web Speech API with fallback to Bhashini for Indian languages:
+
+```typescript
+// Language mapping for speech recognition
+const SPEECH_LANG_CODES = {
+  'hi': 'hi-IN',  // Hindi (India)
+  'en': 'en-IN',  // English (India)
+  'ta': 'ta-IN',  // Tamil
+  'te': 'te-IN',  // Telugu
+  'bn': 'bn-IN',  // Bengali
+  'mr': 'mr-IN',  // Marathi
+  'gu': 'gu-IN',  // Gujarati
+  'kn': 'kn-IN',  // Kannada
+  'ml': 'ml-IN',  // Malayalam
+  'or': 'or-IN',  // Odia
+};
+
+// Voice input flow
+1. User clicks microphone icon
+2. Browser requests microphone permission
+3. SpeechRecognition instance created with language code
+4. Audio captured and sent to speech recognition service
+5. Transcript returned and inserted into form field
+6. Visual feedback provided throughout process
+```
+
+---
+
+### Security Implementation
+
+| Layer | Security Measure | Implementation |
+|-------|------------------|----------------|
+| Authentication | JWT Bearer Token | HTTPBearer dependency in FastAPI |
+| Authorization | Vendor-specific access | Vendor ID extracted from JWT claims |
+| Input Validation | Server-side | Pydantic field_validator decorators |
+| Rate Limiting | Per-endpoint limits | rate_limit decorator (calls/period) |
+| SQL Injection | Parameterized queries | Supabase client with prepared statements |
+| XSS Prevention | Input sanitization | Strip whitespace, validate formats |
+| Audit Trail | Activity logging | Log all CRUD operations with timestamps |
+
+---
+
+### Error Handling
+
+```python
+# Standard error response format
+{
+    "detail": "Error description for user",
+    "error_code": "VENDOR_001",  # Machine-readable code
+    "field": "phone_number"      # Which field caused error (if applicable)
+}
+
+# Common error codes
+VENDOR_001: Profile already exists
+VENDOR_002: Profile not found
+VENDOR_003: Invalid language code
+VENDOR_004: Validation failed
+VENDOR_005: Database operation failed
+VENDOR_006: Cache operation failed
+```
+
+---
+
+### Performance Considerations
+
+| Operation | Target Latency | Optimization |
+|-----------|----------------|--------------|
+| Profile GET | <50ms | Redis cache hit |
+| Profile CREATE | <200ms | Async write, sync cache |
+| Profile UPDATE | <150ms | Cache invalidation |
+| Search | <300ms | Indexed database queries |
+| Statistics | <100ms | Pre-computed, cached |
+
+---
+
+### Testing Coverage
+
+| Component | Test File | Coverage |
+|-----------|-----------|----------|
+| VendorService | `test_vendor_service.py` | 15 test cases |
+| Vendor Endpoints | `test_vendor_endpoints.py` | 12 test cases |
+| VoiceInput Component | `VoiceInput.test.tsx` | 9 test cases |
+| vendorService API | Integration tests | Full CRUD coverage |
+
+---
 
 ## 📞 Support & Resources
 

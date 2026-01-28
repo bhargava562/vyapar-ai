@@ -125,12 +125,16 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
         
+    - name: Lowercase repository name
+      run: |
+        echo "REPO_LC=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
+
     - name: Build and push backend image
       uses: docker/build-push-action@v5
       with:
         context: ./backend
         push: true
-        tags: ghcr.io/${{ github.repository }}/backend:latest
+        tags: ghcr.io/${{ env.REPO_LC }}/backend:latest
         cache-from: type=gha
         cache-to: type=gha,mode=max
         
@@ -139,7 +143,7 @@ jobs:
       with:
         context: ./frontend
         push: true
-        tags: ghcr.io/${{ github.repository }}/frontend:latest
+        tags: ghcr.io/${{ env.REPO_LC }}/frontend:latest
         cache-from: type=gha
         cache-to: type=gha,mode=max
 

@@ -4,6 +4,7 @@
  */
 
 import axios from 'axios';
+import { API_BASE_URL } from '../config';
 
 export interface VoiceConfig {
   language: string;
@@ -83,7 +84,7 @@ class VoiceService {
   private recordingTimeout: NodeJS.Timeout | null = null;
 
   constructor() {
-    this.baseURL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+    this.baseURL = API_BASE_URL;
   }
 
   /**
@@ -104,7 +105,7 @@ class VoiceService {
 
       // Initialize audio context for noise analysis
       this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-      
+
       return true;
     } catch (error) {
       console.error('Voice service initialization failed:', error);
@@ -231,13 +232,13 @@ class VoiceService {
         }
 
         this.mediaRecorder.onstop = () => {
-          const audioBlob = new Blob(this.audioChunks, { 
-            type: this.getSupportedMimeType() 
+          const audioBlob = new Blob(this.audioChunks, {
+            type: this.getSupportedMimeType()
           });
-          
+
           // Cleanup
           this.cleanup();
-          
+
           resolve(audioBlob);
         };
 
@@ -254,7 +255,7 @@ class VoiceService {
    * Transcribe audio using Bhashini ASR
    */
   async transcribeAudio(
-    audioBlob: Blob, 
+    audioBlob: Blob,
     language: string = 'hi'
   ): Promise<ASRResult> {
     try {
@@ -366,7 +367,7 @@ class VoiceService {
       const formData = new FormData();
       formData.append('audio_file', audioBlob, 'recording.wav');
       formData.append('language', language);
-      
+
       if (context) {
         formData.append('context', JSON.stringify(context));
       }
@@ -511,7 +512,7 @@ class VoiceService {
     const source = this.audioContext.createMediaStreamSource(stream);
     this.analyser = this.audioContext.createAnalyser();
     this.analyser.fftSize = 256;
-    
+
     source.connect(this.analyser);
 
     // Monitor audio levels
@@ -531,7 +532,7 @@ class VoiceService {
       if (!this.analyser || !this.isRecording) return;
 
       this.analyser.getByteFrequencyData(dataArray);
-      
+
       // Calculate average volume
       const average = dataArray.reduce((sum, value) => sum + value, 0) / bufferLength;
       const normalizedLevel = average / 255;
@@ -593,7 +594,7 @@ class VoiceService {
    */
   private cleanup(): void {
     this.isRecording = false;
-    
+
     if (this.recordingTimeout) {
       clearTimeout(this.recordingTimeout);
       this.recordingTimeout = null;

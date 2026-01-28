@@ -2,7 +2,7 @@
 Application configuration settings
 """
 
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import List, Optional
 import os
 
@@ -57,9 +57,12 @@ class Settings(BaseSettings):
     OFFLINE_CACHE_SIZE_MB: int = 50
     OFFLINE_SYNC_BATCH_SIZE: int = 100
     
-    class Config:
-        env_file = ".env"
-        case_sensitive = True
+    # Pydantic v2 configuration using SettingsConfigDict
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        case_sensitive=True,
+        extra="ignore"  # Ignore extra environment variables
+    )
 
 # Global settings instance
 settings = Settings()
