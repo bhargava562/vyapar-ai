@@ -385,7 +385,7 @@ class AuthService:
             logger.error(f"Failed to get or create vendor: {e}")
             raise Exception("Failed to process vendor account")
     
-    async def refresh_token(self, refresh_token: str) -> Dict[str, str]:
+    async def refresh_token(self, refresh_token: str) -> Dict[str, Any]:
         """Refresh access token"""
         try:
             # Verify refresh token

@@ -8,8 +8,10 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+from typing import Optional
+
 # Global Supabase client
-supabase: Client = None
+supabase: Optional[Client] = None
 
 async def init_db():
     """Initialize database connection"""

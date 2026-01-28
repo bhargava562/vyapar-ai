@@ -9,7 +9,7 @@ from starlette.responses import Response
 import time
 import hashlib
 import logging
-from typing import Dict, Tuple
+from typing import Dict, Tuple, Any
 
 from app.core.redis_client import get_redis
 from app.core.config import settings
@@ -35,14 +35,17 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
     
     def _get_client_identifier(self, request: Request) -> str:
         """Get unique identifier for client (IP + User-Agent hash)"""
-        client_ip = request.client.host
+        if request.client and request.client.host:
+            client_ip = request.client.host
+        else:
+            client_ip = "unknown"
         user_agent = request.headers.get("user-agent", "")
         
         # Create hash of IP + User-Agent for privacy
         identifier = f"{client_ip}:{hashlib.md5(user_agent.encode()).hexdigest()[:8]}"
         return identifier
     
-    async def _check_rate_limit(self, identifier: str, endpoint: str) -> Tuple[bool, Dict[str, int]]:
+    async def _check_rate_limit(self, identifier: str, endpoint: str) -> Tuple[bool, Dict[str, Any]]:
         """Check if request is within rate limits"""
         try:
             redis = get_redis()

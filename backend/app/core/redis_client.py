@@ -11,7 +11,7 @@ from typing import Any, Optional
 logger = logging.getLogger(__name__)
 
 # Global Redis client
-redis_client: redis.Redis = None
+redis_client: Optional[redis.Redis] = None
 
 async def init_redis():
     """Initialize Redis connection"""
