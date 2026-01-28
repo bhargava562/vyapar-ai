@@ -27,8 +27,10 @@ async def init_redis():
         await redis_client.ping()
         logger.info("Redis connection initialized successfully")
     except Exception as e:
-        logger.error(f"Failed to initialize Redis: {e}")
-        raise
+
+        logger.warning(f"Failed to initialize Redis: {e}. Running without cache/rate-limiting.")
+        # Do not raise, allow app to start without Redis
+        # raise
 
 def get_redis() -> redis.Redis:
     """Get Redis client instance"""

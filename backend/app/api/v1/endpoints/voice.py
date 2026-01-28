@@ -5,7 +5,7 @@ Voice API endpoints for ASR/TTS functionality
 import asyncio
 import logging
 from typing import Dict, Any, Optional
-from fastapi import APIRouter, HTTPException, UploadFile, File, Form, Depends
+from fastapi import APIRouter, HTTPException, UploadFile, File, Form, Depends, Request
 from fastapi.responses import Response
 from app.services.bhashini_service import bhashini_service
 from app.schemas.voice import (
@@ -146,25 +146,26 @@ async def speech_to_text(
 
 @router.post("/tts", response_model=TTSResponse)
 @rate_limit(calls=50, period=60)  # 50 calls per minute
-async def text_to_speech(request: TTSRequest):
+async def text_to_speech(tts_request: TTSRequest, request: Request):
     """
     Convert text to speech using Bhashini TTS
     
     Args:
-        request: TTS request with text and parameters
+        tts_request: TTS request with text and parameters
+        request: FastAPI Request object
         
     Returns:
         Audio data and metadata
     """
     try:
         # Validate text length
-        if len(request.text.strip()) == 0:
+        if len(tts_request.text.strip()) == 0:
             raise HTTPException(
                 status_code=400,
                 detail="Text cannot be empty"
             )
         
-        if len(request.text) > 1000:
+        if len(tts_request.text) > 1000:
             raise HTTPException(
                 status_code=400,
                 detail="Text too long. Maximum length is 1000 characters."
@@ -172,10 +173,10 @@ async def text_to_speech(request: TTSRequest):
         
         # Synthesize speech
         result = await bhashini_service.synthesize_speech(
-            text=request.text,
-            language=request.language,
-            voice_gender=request.voice_gender,
-            audio_format=request.audio_format
+            text=tts_request.text,
+            language=tts_request.language,
+            voice_gender=tts_request.voice_gender,
+            audio_format=tts_request.audio_format
         )
         
         return TTSResponse(**result)
@@ -191,12 +192,13 @@ async def text_to_speech(request: TTSRequest):
 
 @router.post("/tts/audio")
 @rate_limit(calls=50, period=60)
-async def text_to_speech_audio(request: TTSRequest):
+async def text_to_speech_audio(tts_request: TTSRequest, request: Request):
     """
     Convert text to speech and return raw audio data
     
     Args:
-        request: TTS request with text and parameters
+        tts_request: TTS request with text and parameters
+        request: FastAPI Request object
         
     Returns:
         Raw audio file
@@ -204,10 +206,10 @@ async def text_to_speech_audio(request: TTSRequest):
     try:
         # Synthesize speech
         result = await bhashini_service.synthesize_speech(
-            text=request.text,
-            language=request.language,
-            voice_gender=request.voice_gender,
-            audio_format=request.audio_format
+            text=tts_request.text,
+            language=tts_request.language,
+            voice_gender=tts_request.voice_gender,
+            audio_format=tts_request.audio_format
         )
         
         if not result.get("success", False) or not result.get("audio_data"):
@@ -225,13 +227,13 @@ async def text_to_speech_audio(request: TTSRequest):
             "mp3": "audio/mpeg",
             "ogg": "audio/ogg"
         }
-        content_type = content_type_map.get(request.audio_format.lower(), "audio/wav")
+        content_type = content_type_map.get(tts_request.audio_format.lower(), "audio/wav")
         
         return Response(
             content=audio_data,
             media_type=content_type,
             headers={
-                "Content-Disposition": f"attachment; filename=speech.{request.audio_format}",
+                "Content-Disposition": f"attachment; filename=speech.{tts_request.audio_format}",
                 "Cache-Control": "public, max-age=3600"  # Cache for 1 hour
             }
         )

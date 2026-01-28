@@ -25,6 +25,12 @@ A comprehensive multilingual marketplace application designed for Indian vendors
 - **Type Safety**: Full TypeScript implementation
 - **Comprehensive Testing**: Unit tests, integration tests, and property-based testing
 - **CI/CD Pipeline**: Automated testing, building, and deployment
+- **Role-Based Access**: Specialized dashboards for Farmers, Traders, and Buyers
+
+### User Roles
+- **Farmers**: Produce management, price insights, and selling
+- **Traders**: Aggregation, mandi feeds, and margin analytics
+- **Buyers**: Discovery, price comparison, and purchasing
 
 ## 🏗️ Architecture
 
