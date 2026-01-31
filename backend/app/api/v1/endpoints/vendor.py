@@ -86,6 +86,7 @@ async def create_profile(
     vendor_id: str = Depends(get_current_vendor)
 ):
     """Create vendor profile (for completing initial setup)"""
+    logger.info(f"Received create profile request for vendor {vendor_id} with data: {profile_data.model_dump()}")
     vendor_service = VendorService()
     
     try:
@@ -103,6 +104,9 @@ async def create_profile(
             stall_id=profile_data.stall_id,
             market_location=profile_data.market_location,
             email=profile_data.email,
+            role=profile_data.role,
+            state=profile_data.state,
+            district=profile_data.district,
             preferred_language=profile_data.preferred_language
         )
         

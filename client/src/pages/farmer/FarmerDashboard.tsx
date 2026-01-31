@@ -36,10 +36,10 @@ const FarmerDashboard: React.FC = () => {
                 </div>
             </header>
 
-            <div className="mt-10 p-4 space-y-6">
+            <div className="mt-10 p-4 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
                 {/* Price Alert Card */}
-                <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+                <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 h-full">
                     <h2 className="font-bold text-gray-900 mb-3">Today's Best Price</h2>
                     <div className="flex justify-between items-end">
                         <div>
@@ -55,7 +55,7 @@ const FarmerDashboard: React.FC = () => {
                 </div>
 
                 {/* My Listings Preview */}
-                <div>
+                <div className="h-full">
                     <div className="flex justify-between items-center mb-3">
                         <h2 className="font-bold text-gray-900">My Active Listings</h2>
                         <button onClick={() => navigate('/farmer/produce')} className="text-green-600 text-sm font-medium">View All</button>
@@ -76,12 +76,11 @@ const FarmerDashboard: React.FC = () => {
                                 </div>
                             </div>
                         ))}
-                        {/* Empty state hint if needed */}
                     </div>
                 </div>
 
                 {/* Buyer Interest */}
-                <div className="bg-blue-50 rounded-2xl p-5 border border-blue-100">
+                <div className="bg-blue-50 rounded-2xl p-5 border border-blue-100 h-full">
                     <div className="flex items-start space-x-3">
                         <div className="bg-blue-100 p-2 rounded-lg text-blue-600">
                             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">

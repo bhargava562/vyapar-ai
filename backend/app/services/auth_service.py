@@ -236,6 +236,8 @@ class AuthService:
                 contact_type = "email"
             else:
                 raise ValueError("Invalid phone number or email format")
+
+            logger.info(f"Processing OTP request for {identifier} ({contact_type})")
             
             # Check rate limiting
             allowed, remaining_time = await self._check_rate_limit(identifier, "otp")
@@ -272,6 +274,7 @@ class AuthService:
     
     async def verify_otp(self, token: str, otp: str) -> AuthResponse:
         """Verify OTP and create session"""
+        logger.info(f"Verifying OTP for token {token}")
         try:
             # Get OTP ID from token
             token_key = f"otp_token:{token}"
@@ -342,6 +345,7 @@ class AuthService:
     
     async def _get_or_create_vendor(self, identifier: str) -> Dict[str, Any]:
         """Get existing vendor or create new one"""
+        logger.debug(f"Getting or creating vendor for identifier: {identifier}")
         try:
             # Check if vendor exists
             if self._is_valid_phone(identifier):

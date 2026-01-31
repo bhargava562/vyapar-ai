@@ -9,6 +9,8 @@
 !.env.example
 !.env.template
 
+update_docker.ps1
+
 # API Keys and Certificates
 *.key
 *.pem

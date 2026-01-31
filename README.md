@@ -73,7 +73,7 @@ backend/
 
 ### Frontend (React PWA + TypeScript)
 ```
-frontend/
+client/
 ├── src/
 │   ├── components/          # Reusable UI components
 │   │   ├── LanguageSelector.tsx    # Language switching
@@ -146,7 +146,7 @@ frontend/
 
 3. **Frontend Setup**
    ```bash
-   cd frontend
+   cd client
    cp .env.example .env
    # Edit .env with your API endpoints
    npm install
@@ -193,7 +193,7 @@ If you encounter issues:
 
 2. **Start Frontend**
    ```bash
-   cd frontend
+   cd client
    npm run dev
    ```
 
@@ -278,7 +278,7 @@ pytest -m property          # Property-based tests
 
 ### Frontend Testing
 ```bash
-cd frontend
+cd client
 # Run all tests
 npm run test
 

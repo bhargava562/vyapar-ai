@@ -14,6 +14,9 @@ class VendorProfile(BaseModel):
     phone_number: str
     email: Optional[str]
     preferred_language: str
+    role: str = "farmer"
+    state: Optional[str] = None
+    district: Optional[str] = None
     points: int
     status: str
     created_at: datetime
@@ -26,6 +29,9 @@ class VendorProfileCreate(BaseModel):
     market_location: str
     phone_number: str
     email: Optional[str] = None
+    role: str = "farmer"
+    state: Optional[str] = None
+    district: Optional[str] = None
     preferred_language: str = "hi"
     
     @field_validator('name')
@@ -61,11 +67,22 @@ class VendorProfileCreate(BaseModel):
             raise ValueError(f'Unsupported language. Supported: {", ".join(supported_languages)}')
         return v
 
+    @field_validator('role')
+    @classmethod
+    def validate_role(cls, v):
+        valid_roles = ['farmer', 'trader', 'buyer']
+        if v and v.lower() not in valid_roles:
+            raise ValueError(f'Invalid role. Must be one of: {", ".join(valid_roles)}')
+        return v.lower() if v else 'farmer'
+
 class VendorProfileUpdate(BaseModel):
     name: Optional[str] = None
     stall_id: Optional[str] = None
     market_location: Optional[str] = None
     email: Optional[str] = None
+    role: Optional[str] = None
+    state: Optional[str] = None
+    district: Optional[str] = None
     preferred_language: Optional[str] = None
     
     @field_validator('name')

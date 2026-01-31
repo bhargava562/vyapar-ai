@@ -25,8 +25,8 @@ class VendorService:
         self.supported_languages = ['hi', 'en', 'ta', 'te', 'bn', 'mr', 'gu', 'kn', 'ml', 'or']
         
         # Default profile completion requirements
-        self.required_fields = ['name', 'market_location', 'preferred_language']
-        self.optional_fields = ['stall_id', 'email']
+        self.required_fields = ['name', 'market_location', 'preferred_language', 'role']
+        self.optional_fields = ['stall_id', 'email', 'state', 'district']
     
     async def get_vendor_profile(self, vendor_id: str) -> Optional[VendorProfile]:
         """Get vendor profile by ID"""
@@ -50,6 +50,7 @@ class VendorService:
     
     async def create_vendor_profile(self, vendor_data: VendorProfileCreate) -> Optional[VendorProfile]:
         """Create new vendor profile"""
+        logger.info(f"Creating vendor profile for {vendor_data.name} (Role: {vendor_data.role})")
         try:
             # Validate language preference
             if vendor_data.preferred_language not in self.supported_languages:
@@ -62,6 +63,9 @@ class VendorService:
                 "market_location": vendor_data.market_location,
                 "phone_number": vendor_data.phone_number,
                 "email": vendor_data.email,
+                "role": vendor_data.role,
+                "state": vendor_data.state,
+                "district": vendor_data.district,
                 "preferred_language": vendor_data.preferred_language,
                 "points": 0,
                 "status": "active",
@@ -94,6 +98,7 @@ class VendorService:
     
     async def update_vendor_profile(self, vendor_id: str, updates: VendorProfileUpdate) -> Optional[VendorProfile]:
         """Update vendor profile"""
+        logger.debug(f"Updating vendor {vendor_id} with data: {updates.model_dump(exclude_unset=True)}")
         try:
             # Get current profile for comparison
             current_profile = await self.get_vendor_profile(vendor_id)
@@ -119,6 +124,15 @@ class VendorService:
                 if updates.preferred_language not in self.supported_languages:
                     raise ValueError(f"Unsupported language: {updates.preferred_language}")
                 update_data["preferred_language"] = updates.preferred_language
+
+            if updates.role is not None:
+                update_data["role"] = updates.role
+            
+            if updates.state is not None:
+                update_data["state"] = updates.state
+                
+            if updates.district is not None:
+                update_data["district"] = updates.district
             
             if not update_data:
                 return current_profile  # No changes to make

@@ -1,3 +1,4 @@
+
 # Market Mania - Development Makefile
 
 .PHONY: help install dev build test clean docker-up docker-down lint format venv
@@ -28,63 +29,63 @@ venv:
 install: venv
 	@echo "Installing backend dependencies..."
 	cd backend && source venv/bin/activate && pip install -r requirements.txt
-	@echo "Installing frontend dependencies..."
-	cd frontend && npm install
+	@echo "Installing client dependencies..."
+	cd client && npm install
 
 # Development servers
 dev:
 	@echo "Starting development servers..."
 	docker-compose up -d redis
 	@echo "Backend: http://localhost:8000"
-	@echo "Frontend: http://localhost:5173"
-	@echo "Run 'make dev-backend' and 'make dev-frontend' in separate terminals"
+	@echo "Client: http://localhost:5173"
+	@echo "Run 'make dev-backend' and 'make dev-client' in separate terminals"
 
 dev-backend:
 	cd backend && source venv/bin/activate && uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
-dev-frontend:
-	cd frontend && npm run dev
+dev-client:
+	cd client && npm run dev
 
 # Build production
 build:
 	@echo "Building backend..."
 	cd backend && source venv/bin/activate && python -m compileall app/
-	@echo "Building frontend..."
-	cd frontend && npm run build
+	@echo "Building client..."
+	cd client && npm run build
 
 # Run tests
 test:
 	@echo "Running backend tests..."
 	cd backend && source venv/bin/activate && pytest --cov=app --cov-report=term-missing
-	@echo "Running frontend tests..."
-	cd frontend && npm run test
+	@echo "Running client tests..."
+	cd client && npm run test
 
 test-backend:
 	cd backend && source venv/bin/activate && pytest --cov=app --cov-report=html
 
-test-frontend:
-	cd frontend && npm run test:coverage
+test-client:
+	cd client && npm run test:coverage
 
 # Property-based tests
 test-property:
 	@echo "Running property-based tests..."
 	cd backend && source venv/bin/activate && pytest -m property
-	cd frontend && npm run test -- --grep "Property"
+	cd client && npm run test -- --grep "Property"
 
 # Linting
 lint:
 	@echo "Linting backend..."
 	cd backend && source venv/bin/activate && flake8 app --count --select=E9,F63,F7,F82 --show-source --statistics
 	cd backend && source venv/bin/activate && mypy app --ignore-missing-imports
-	@echo "Linting frontend..."
-	cd frontend && npm run lint
+	@echo "Linting client..."
+	cd client && npm run lint
 
 # Code formatting
 format:
 	@echo "Formatting backend code..."
 	cd backend && source venv/bin/activate && black app/
-	@echo "Formatting frontend code..."
-	cd frontend && npm run lint:fix
+	@echo "Formatting client code..."
+	cd client && npm run lint:fix
 
 # Docker operations
 docker-up:
@@ -116,15 +117,15 @@ clean:
 	rm -rf backend/htmlcov
 	rm -rf backend/logs/*.log
 	rm -rf backend/venv
-	rm -rf frontend/dist
-	rm -rf frontend/node_modules/.cache
-	rm -rf frontend/coverage
+	rm -rf client/dist
+	rm -rf client/node_modules/.cache
+	rm -rf client/coverage
 
 # Security checks
 security:
 	@echo "Running security checks..."
 	cd backend && source venv/bin/activate && safety check
-	cd frontend && npm audit
+	cd client && npm audit
 
 # Performance tests
 perf:
@@ -135,7 +136,7 @@ perf:
 setup-env:
 	@echo "Setting up environment files..."
 	cp backend/.env.example backend/.env
-	cp frontend/.env.example frontend/.env
+	cp client/.env.example client/.env
 	@echo "Please edit the .env files with your actual configuration"
 
 # Deployment
